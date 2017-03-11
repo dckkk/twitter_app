@@ -12,5 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('status.index');
 });
+
+Route::resource('status','StatusController');
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
