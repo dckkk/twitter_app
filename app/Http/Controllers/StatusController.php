@@ -8,6 +8,10 @@ use App\Http\Requests;
 
 use App\Status;
 
+use App\User;
+
+use DB;
+
 class StatusController extends Controller
 {
     /**
@@ -17,7 +21,11 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        $data = DB::table('status')
+                ->leftjoin('users', 'status.status_user', '=', 'users.id')
+                ->orderBy('status.created_at', 'desc')
+                ->get();
+        return view('status.home',compact('data'));
     }
 
     /**
@@ -65,7 +73,8 @@ class StatusController extends Controller
      */
     public function edit($id)
     {
-        //
+        $users=User::find($id);
+        return view('status.detail', compact('users'));
     }
 
     /**
@@ -77,7 +86,21 @@ class StatusController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'foto' => ['mimes:jpg,jpeg,JPEG,png,gif,bmp', 'max:2024'],
+        ]);
+
+        $foto = $request->file('foto')->getClientOriginalName();
+        $destination = base_path() . '/public/uploads';
+        $request->file('foto')->move($destination, $foto);
+
+        $data=User::find($id);
+        $data->name=$request->get('name');
+        $data->email=$request->get('email');
+        $data->password=bcrypt($request->get('password'));
+        $data->foto=$foto;
+        $data->save();
+        return redirect ('status');
     }
 
     /**

@@ -34,7 +34,7 @@
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="home.html">Twitter Application</a>
+                <a class="navbar-brand" href="{{ url('status') }}">Twitter Application</a>
             </div>
         </div>
         <!-- /.container -->
@@ -51,7 +51,7 @@
                 
                 <div class="update-box">
                     {{ Form::open(['method' => 'POST','route' => ['status.store']]) }}
-                        <input type="hidden" name="user" value="1">
+                        <input type="hidden" name="user" value="{{ Auth::user()->id }}">
                         <div class="col-lg-12  col-md-12 col-xs-12 ">
                             <div class="form-group">
                                 <input type="text" name="status" placeholder="Update status..." class="form-control">
@@ -64,69 +64,64 @@
                 </div>
 
                 <!-- End Status -->
-
-                <!-- Status 1 -->
-                <div class="status-friend">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
-                        <table style="margin-top: 10px">
-                              <tr>
-                                <td rowspan="2">
-                                    <span class="img-status">
-                                        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSb04SsXQo6JtxkqwsIzuARWaaJl91e2zBfwAbqTAdrnxcn2vkvSA" class="img-circle" alt="Friend" width="50" height="50">
-                                    </span>
-                                </td>
-                                <td><strong>Teman 1</strong></td>
-                              </tr>
-                              <tr>
-                                <td>Uhuy...</td>
-                              </tr>
-                        </table>
-                    </div>
-                </div>
-
+                @foreach($data as $status)
+                <?php
+                    // print_r($status);
+                    // echo Auth::user()->id;
+                    // echo $status->status_user;
+                    if (!empty($status->foto)) {
+                        $img = "$status->foto";
+                    } else {
+                        $img = "nophoto.png";
+                    }
+                    if ($status->status_user == Auth::user()->id) {
+                        ?>
+                        <div class="status-me">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                    <table style="margin-top: 10px" align="right">
+                                          <tr>
+                                            <td align="right"><strong>{{$status->name}}</strong></td>
+                                            <td rowspan="2">
+                                                <span class="img-status-me">
+                                                    <a href="{{ url('status/'.$status->id.'/edit') }}">
+                                                        <img src="{{ asset('uploads/'.$img)  }}" class="img-circle" alt="Images" width="50" height="50">
+                                                    </a>
+                                                </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td align="right">{{$status->status_content}}</td>
+                                          </tr>
+                                    </table>
+                                </div>
+                            </div>
+                    <?php
+                    } else {
+                        ?><div class="status-friend">
+                                <div class="col-lg-12 col-md-12 col-xs-12">
+                                    <table style="margin-top: 10px">
+                                          <tr>
+                                            <td rowspan="2">
+                                                <span class="img-status">
+                                                    <img src="{{ asset('uploads/'.$img)  }}" class="img-circle" alt="Friend" width="50" height="50">
+                                                </span>
+                                            </td>
+                                            <td><strong>{{ $status->name }}</strong></td>
+                                          </tr>
+                                          <tr>
+                                            <td>{{ $status->status_content }}</td>
+                                          </tr>
+                                    </table>
+                                </div>
+                            </div>
+                    <?php
+                    }
+                
+                ?>
+                
                 <!-- End Status 1 -->
-
-                <!-- Status 2 -->
-                <div class="status-friend">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
-                        <table style="margin-top: 10px">
-                              <tr>
-                                <td rowspan="2">
-                                    <span class="img-status">
-                                        <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSfo4by-LyCCJOtTqggN9ETNfyvBfplLmQl7622wwU-81HZcc2H" class="img-circle" alt="Friend" width="50" height="50">
-                                    </span>
-                                </td>
-                                <td><strong>Teman 2</strong></td>
-                              </tr>
-                              <tr>
-                                <td>Uhuy...</td>
-                              </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- End Status 2 -->
-
-                <!-- Own Status  -->
-                <div class="status-me">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
-                        <table style="margin-top: 10px" align="right">
-                              <tr>
-                                <td align="right"><strong>Me</strong></td>
-                                <td rowspan="2">
-                                    <span class="img-status-me">
-                                        <a href="detail.html"><img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSfo4by-LyCCJOtTqggN9ETNfyvBfplLmQl7622wwU-81HZcc2H" class="img-circle" alt="Friend" width="50" height="50"></a>
-                                    </span>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td align="right">Uhuy...</td>
-                              </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- End Own Status -->
+                @endforeach
+                
 
             </div>
         </div>

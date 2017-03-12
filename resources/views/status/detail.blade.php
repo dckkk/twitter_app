@@ -12,13 +12,12 @@
     <title>Twitter Application</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
+    {{ HTML::style('css/bootstrap.css') }}
 
     <!-- Custom CSS -->
-    <link href="css/1-col-portfolio.css" rel="stylesheet">
-
+    {{ HTML::style('css/1-col-portfolio.css') }}
     <!-- Style CSS -->
-    <link href="css/style.css" rel="stylesheet">
+    {{ HTML::style('css/style.css') }}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,7 +35,7 @@
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand" href="home.html">Twitter Application</a>
+                <a class="navbar-brand" href="{{ url('status') }}">Twitter Application</a>
             </div>
         </div>
         <!-- /.container -->
@@ -45,22 +44,31 @@
     <!-- Page Content -->
     <div class="container">
 
-
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-10 col-xs-offset-1">
-
+            <?php
+                // print_r($status);
+                // echo Auth::user()->id;
+                // echo $status->status_user;
+                if (!empty($users->foto)) {
+                    $img = "$users->foto";
+                } else {
+                    $img = "nophoto.png";
+                }
+            ?>
+                {{ Form::open(['method' => 'PATCH','route' => ['status.update', $users->id],'files'=>true]) }}
                 <!-- Upload Foto -->
                 <div class="col-lg-4 col-md-4 col-xs-4">
                     <table>
                         <tr>
-                            <td><img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSb04SsXQo6JtxkqwsIzuARWaaJl91e2zBfwAbqTAdrnxcn2vkvSA" class="img-circle" alt="Friend" width="200" height="200"></td>
+                            <td><img id="showgambar" src="{{ asset('uploads/'.$img)  }}" class="img-circle" alt="Images" width="200" height="200"></td>
                         </tr>
                         <tr>
                             <td align="center">
                                 <label for="file-upload" class="btn-file">
                                     Upload
                                 </label>
-                                <input id="file-upload" type="file"/>
+                                <input id="file-upload" name="foto" type="file"/>
                             </td>
                         </tr>
                     </table>
@@ -73,13 +81,13 @@
                     <div class="detail-box">
                         <div class="col-lg-12  col-md-12 col-xs-12 ">
                             <div class="form-group">
-                                <input type="text" name="status" value="Michael" class="form-control">
+                                <input type="text" name="name" value="{{ $users->name }}" class="form-control">
                             </div>
                             <div class="form-group">
-                                <input type="text" name="status" value="example@gmail.com" class="form-control">
+                                <input type="text" name="email" value="{{ $users->email }}" class="form-control">
                             </div>
                             <div class="form-group">
-                                <input type="password" name="status" value="adssasddsa" class="form-control">
+                                <input type="password" name="password" value="{{ $users->password }}" class="form-control">
                             </div>
                             <div class="form-group">
                                 <input type="submit" value="Save" class="pull-right btn-update" style="margin-top: 190px">
@@ -88,6 +96,7 @@
                     </div>
                 </div>
 
+                {{ Form::close() }}
                 <!-- End Detail -->
 
             </div>
@@ -98,11 +107,29 @@
     <!-- /.container -->
 
     <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    {{ HTML::script('js/jquery.js') }}
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    {{ HTML::script('js/bootstrap.min.js') }}
+    <script type="text/javascript">
 
+      function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#showgambar').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#file-upload").change(function () {
+            readURL(this);
+        });
+
+    </script>
 </body>
 
 </html>
