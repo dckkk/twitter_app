@@ -16,7 +16,7 @@ class Status extends Migration
         {
             $table->increments('status_id');
             $table->string('status_user');
-            $table->string('stasus_content');
+            $table->string('status_content');
             $table->timestamps();
         });
     }
