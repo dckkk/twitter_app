@@ -12,6 +12,8 @@ use App\User;
 
 use DB;
 
+use Validator;
+
 class StatusController extends Controller
 {
     /**
@@ -88,6 +90,7 @@ class StatusController extends Controller
     {
         $this->validate($request, [
             'foto' => ['mimes:jpg,jpeg,JPEG,png,gif,bmp', 'max:2024'],
+            'password' => 'required|min:6',
         ]);
 
         $foto = $request->file('foto')->getClientOriginalName();

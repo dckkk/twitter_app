@@ -55,6 +55,9 @@
                 } else {
                     $img = "nophoto.png";
                 }
+
+                // print_r($users->foto)
+
             ?>
                 {{ Form::open(['method' => 'PATCH','route' => ['status.update', $users->id],'files'=>true]) }}
                 <!-- Upload Foto -->
@@ -64,12 +67,19 @@
                             <td><img id="showgambar" src="{{ asset('uploads/'.$img)  }}" class="img-circle" alt="Images" width="200" height="200"></td>
                         </tr>
                         <tr>
-                            <td align="center">
-                                <label for="file-upload" class="btn-file">
-                                    Upload
-                                </label>
-                                <input id="file-upload" name="foto" type="file"/>
-                            </td>
+                            <div class="form-group{{ $errors->has('foto') ? ' has-error' : '' }}">
+                                <td align="center">
+                                    <label for="file-upload" class="btn-file">
+                                        Upload
+                                    </label>
+                                    <input id="file-upload" name="foto" type="file" value=<?= $users->foto; ?>/>
+                                    @if ($errors->has('foto'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('foto') }}</strong>
+                                        </span>
+                                    @endif
+                                </td>
+                            </div>
                         </tr>
                     </table>
                 </div>
@@ -86,11 +96,16 @@
                             <div class="form-group">
                                 <input type="text" name="email" value="{{ $users->email }}" class="form-control">
                             </div>
-                            <div class="form-group">
-                                <input type="password" name="password" value="{{ $users->password }}" class="form-control">
+                            <div class="class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                                <input placeholder="Confirm or Change your password" type="password" name="password" value="" class="form-control">
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Save" class="pull-right btn-update" style="margin-top: 190px">
+                                <input type="submit" value="Save" class="pull-right btn-update" style="margin-top: 180px">
                             </div>
                         </div>
                     </div>
